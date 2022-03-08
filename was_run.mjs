@@ -1,15 +1,11 @@
-import { test, runSuite } from './rose.mjs';
+import { suite, runSuite } from './rose.mjs';
 
-let was_run = false;
+suite('a canary suite', test => {
+  before(context => {
+    context.was_run = false;
+  });
 
-console.log(was_run);
-
-test('running a test', () => {
-  was_run = true;
+  test('running a test', context => {
+    context.was_run = true;
+  });
 });
-
-console.log(was_run);
-
-runSuite();
-
-console.log(was_run);
