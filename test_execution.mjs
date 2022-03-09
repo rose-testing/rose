@@ -1,23 +1,38 @@
-import { suite, runSuite } from './rose.mjs';
+import { suite, findSuite } from './rose.mjs';
+import { check_was_run, set_was_run } from './run_flag.mjs';
 
 suite('Running some tests', test => {
   test('Running the suite gives us one passing test', t => {
-    let was_run = false;
+    set_was_run(false);
 
-    console.log(was_run);
+    t.eq(check_was_run(), false);
 
     import('./was_run.mjs').then(() => {
-      console.log(was_run);
+      t.eq(check_was_run(), false);
 
-      runSuite('a canary suite');
-      // Next time
-      // const s = findSuite('a canary suite');
-      // console.log(s.context.was_run);
-      // s.run()
+      let suite = findSuite('a canary suite');
 
-      console.log(was_run);
+      suite.run();
+
+      t.eq(check_was_run(), true);
+      t.eq(suite.passingTests, 1);
+    });
+  });
+
+  test('Running a failing test reports one failure', t => {
+    import('./failing.mjs').then(() => {
+      let suite = findSuite('a failing suite');
+
+      suite.run();
+
+      t.eq(suite.failingTests, 1);
     });
   });
 });
 
-runSuite('Running some tests');
+let mainSuite = findSuite('Running some tests');
+
+mainSuite.run();
+
+console.log(`Passing: ${mainSuite.passingTests}`);
+console.log(`Failing: ${mainSuite.failingTests}`);
