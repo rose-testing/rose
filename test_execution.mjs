@@ -2,37 +2,41 @@ import { suite, findSuite } from './rose.mjs';
 import { check_was_run, set_was_run } from './run_flag.mjs';
 
 suite('Running some tests', test => {
-  test('Running the suite gives us one passing test', t => {
+  test('Running the suite gives us one passing test', async t => {
     set_was_run(false);
 
     t.eq(check_was_run(), false);
 
-    import('./was_run.mjs').then(() => {
-      t.eq(check_was_run(), false);
+    await import('./was_run.mjs');
 
-      let suite = findSuite('a canary suite');
+    t.eq(check_was_run(), false);
 
-      suite.run();
+    let suite = findSuite('a canary suite');
 
-      t.eq(check_was_run(), true);
-      t.eq(suite.passingTests, 1);
-    });
+    suite.run();
+
+    t.eq(check_was_run(), true);
+    t.eq(suite.passingTests, 1);
   });
 
-  test('Running a failing test reports one failure', t => {
-    import('./failing.mjs').then(() => {
-      let suite = findSuite('a failing suite');
+  test('Running a failing test reports one failure', async t => {
+    await import('./failing.mjs');
 
-      suite.run();
+    let suite = findSuite('a failing suite');
 
-      t.eq(suite.failingTests, 1);
-    });
+    suite.run();
+
+    t.eq(suite.failingTests, 1);
   });
 });
 
-let mainSuite = findSuite('Running some tests');
+async function runner() {
+  let mainSuite = findSuite('Running some tests');
 
-mainSuite.run();
+  await mainSuite.run();
 
-console.log(`Passing: ${mainSuite.passingTests}`);
-console.log(`Failing: ${mainSuite.failingTests}`);
+  console.log(`Passing: ${mainSuite.passingTests}`);
+  console.log(`Failing: ${mainSuite.failingTests}`);
+}
+
+runner();
