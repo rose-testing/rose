@@ -1,4 +1,4 @@
-import { suite } from './rose.mjs';
+import { suite } from './../../rose.mjs';
 
 suite('a failing suite', test => {
   test('a failing test', t => {

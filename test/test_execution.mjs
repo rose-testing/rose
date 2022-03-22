@@ -1,5 +1,5 @@
-import { suite, findSuite } from './rose.mjs';
-import { check_was_run, set_was_run } from './run_flag.mjs';
+import { suite, findSuite } from '../rose.mjs';
+import { check_was_run, set_was_run } from './fixtures/run_flag.mjs';
 
 suite('Running some tests', test => {
   test('Running the suite gives us one passing test', async t => {
@@ -7,7 +7,7 @@ suite('Running some tests', test => {
 
     t.eq(check_was_run(), false);
 
-    await import('./was_run.mjs');
+    await import('./fixtures/was_run.mjs');
 
     t.eq(check_was_run(), false);
 
@@ -20,7 +20,7 @@ suite('Running some tests', test => {
   });
 
   test('Running a failing test reports one failure', async t => {
-    await import('./failing.mjs');
+    await import('./fixtures/failing.mjs');
 
     let suite = findSuite('a failing suite');
 
