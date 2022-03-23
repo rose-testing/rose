@@ -13,7 +13,7 @@ suite('Running some tests', test => {
 
     let suite = findSuite('a canary suite');
 
-    suite.run();
+    await suite.run();
 
     t.eq(check_was_run(), true);
     t.eq(suite.passingTests, 1);
@@ -24,9 +24,26 @@ suite('Running some tests', test => {
 
     let suite = findSuite('a failing suite');
 
-    suite.run();
+    await suite.run();
 
     t.eq(suite.failingTests, 1);
+    t.eq(suite.failures.length, 1);
+    t.eq(suite.failures[0].left, true);
+    t.eq(suite.failures[0].right, false);
+  });
+
+  test('Stops a test early given a failing assertion', async t => {
+    set_was_run(false);
+
+    await import('./fixtures/stop_early.mjs');
+
+    let suite = findSuite('a suite that stops early');
+
+    await suite.run();
+
+    t.eq(suite.failingTests, 1);
+
+    t.eq(check_was_run(), false);
   });
 });
 
@@ -34,6 +51,11 @@ async function runner() {
   let mainSuite = findSuite('Running some tests');
 
   await mainSuite.run();
+
+  for (const failure of mainSuite.failures) {
+    console.log(`Failure: ${failure.test.description}`);
+    console.log(`\tExpected ${failure.left} to equal ${failure.right}\n`);
+  }
 
   console.log(`Passing: ${mainSuite.passingTests}`);
   console.log(`Failing: ${mainSuite.failingTests}`);

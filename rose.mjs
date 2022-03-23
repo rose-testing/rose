@@ -1,5 +1,32 @@
 const suites = {};
 
+class EqualsAssertionFailure extends Error {
+  constructor(test, left, right) {
+    super('Assertion Failure');
+    
+    this.test = test;
+    this.left = left;
+    this.right = right;
+  }
+}
+
+async function runTest(thisSuite, example) {
+  try {
+    await example.body({
+      eq(left, right) {
+        if (left !== right) {
+          throw new EqualsAssertionFailure(example, left, right);
+        }
+      }
+    });
+
+    thisSuite.passingTests += 1;
+  } catch (error) {
+    thisSuite.failures.push(error);
+    thisSuite.failingTests += 1;
+  }
+}
+
 export function suite(name, suiteBody) {
   const tests = [];
 
@@ -13,19 +40,10 @@ export function suite(name, suiteBody) {
     tests,
     failingTests: 0,
     passingTests: 0,
+    failures: [],
     async run() {
       for (const example of tests) {
-        await example.body({
-          eq(left, right) {
-            if (left === right) {
-              thisSuite.passingTests += 1;
-            } else {
-              console.log(`Failing test: ${example.description}`);
-              console.log(`Expected ${left} to equal ${right}\n`);
-              thisSuite.failingTests += 1;
-            }
-          }
-        });
+        await runTest(thisSuite, example);
       }
     }
   };
