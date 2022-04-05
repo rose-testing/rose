@@ -1,8 +1,11 @@
 * [ ] Run some setup before the tests
 * [ ] Run some teardown after the tests
 * [ ] Extract runner into separate file
-* [ ] Add greater than assertion
-* [ ] Handle failure messages more cleanly
+* [x] Add greater than assertion
+* [ ] Add deep equality assertion
+* [ ] Add boolean assertion
+* [x] Define failure messages in the failure class
+* [ ] Handle generic errors in reporter
 
 
 

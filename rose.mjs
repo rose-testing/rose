@@ -3,10 +3,28 @@ const suites = {};
 class EqualsAssertionFailure extends Error {
   constructor(test, left, right) {
     super('Assertion Failure');
-    
+
     this.test = test;
     this.left = left;
     this.right = right;
+  }
+
+  get hint() {
+    return `Expected ${JSON.stringify(this.left)} to equal ${JSON.stringify(this.right)}`;
+  }
+}
+
+class GreaterThanAssertionFailure extends Error {
+  constructor(test, left, right) {
+    super('Assertion Failure');
+
+    this.test = test;
+    this.left = left;
+    this.right = right;
+  }
+
+  get hint() {
+    return `Expected ${JSON.stringify(this.left)} to be greater than ${JSON.stringify(this.right)}`;
   }
 }
 
@@ -16,6 +34,12 @@ async function runTest(thisSuite, example) {
       eq(left, right) {
         if (left !== right) {
           throw new EqualsAssertionFailure(example, left, right);
+        }
+      },
+
+      gt(left, right) {
+        if (left <= right) {
+          throw new GreaterThanAssertionFailure(example, left, right);
         }
       }
     });

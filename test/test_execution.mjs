@@ -46,19 +46,3 @@ suite('Running some tests', test => {
     t.eq(check_was_run(), false);
   });
 });
-
-async function runner() {
-  let mainSuite = findSuite('Running some tests');
-
-  await mainSuite.run();
-
-  for (const failure of mainSuite.failures) {
-    console.log(`Failure: ${failure.test.description}`);
-    console.log(`\tExpected ${failure.left} to equal ${failure.right}\n`);
-  }
-
-  console.log(`Passing: ${mainSuite.passingTests}`);
-  console.log(`Failing: ${mainSuite.failingTests}`);
-}
-
-runner();
