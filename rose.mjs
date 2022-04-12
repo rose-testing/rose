@@ -75,6 +75,10 @@ export function suite(name, suiteBody) {
   suites[name] = thisSuite;
 }
 
+export function listSuites() {
+  return Object.keys(suites);
+}
+
 export function findSuite(name) {
   return suites[name];
 }

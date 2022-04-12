@@ -1,15 +1,15 @@
 * [ ] Run some setup before the tests
 * [ ] Run some teardown after the tests
-* [ ] Extract runner into separate file
-* [x] Add greater than assertion
 * [ ] Add deep equality assertion
 * [ ] Add boolean assertion
-* [x] Define failure messages in the failure class
 * [ ] Handle generic errors in reporter
 
 
 
 
+* [x] Extract runner into separate file
+* [x] Define failure messages in the failure class
+* [x] Add greater than assertion
 * [x] Declare a test
 * [x] Run a test
 * [x] Organize tests in a suite
@@ -20,3 +20,6 @@
 * [x] Report test results
 * [x] Save details about failing assertions
 * [x] Stop a test early on a failing assertion
+* [x] Aggregate all test results
+* [x] Run all suites
+* [x] Import all tests
