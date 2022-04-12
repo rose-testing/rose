@@ -1,3 +1,5 @@
+import { red, green, reset } from './colors.mjs';
+
 const suites = {};
 
 class EqualsAssertionFailure extends Error {
@@ -28,7 +30,7 @@ class GreaterThanAssertionFailure extends Error {
   }
 }
 
-async function runTest(thisSuite, example) {
+async function runTest(thisSuite, example, output) {
   try {
     await example.body({
       eq(left, right) {
@@ -45,11 +47,22 @@ async function runTest(thisSuite, example) {
     });
 
     thisSuite.passingTests += 1;
+    output.write(`${green}.${reset}`);
   } catch (error) {
+    // In case the error is generic
+    error.test = example;
+
     thisSuite.failures.push(error);
     thisSuite.failingTests += 1;
+    output.write(`${red}F${reset}`);
   }
 }
+
+const mockOutput = {
+  write(_content) {
+    return;
+  }
+};
 
 export function suite(name, suiteBody) {
   const tests = [];
@@ -65,9 +78,9 @@ export function suite(name, suiteBody) {
     failingTests: 0,
     passingTests: 0,
     failures: [],
-    async run() {
+    async run(output = mockOutput) {
       for (const example of tests) {
-        await runTest(thisSuite, example);
+        await runTest(thisSuite, example, output);
       }
     }
   };

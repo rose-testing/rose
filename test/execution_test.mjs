@@ -13,10 +13,20 @@ suite('Running some tests', test => {
 
     let suite = findSuite('a canary suite');
 
-    await suite.run();
+    const display = [];
+
+    const mockOutput = {
+      write(content) {
+        display.push(content);
+      }
+    };
+
+    await suite.run(mockOutput);
 
     t.eq(check_was_run(), true);
     t.eq(suite.passingTests, 1);
+
+    t.eq(display[0], '\u001b[32m.\u001b[0m');
   });
 
   test('Running a failing test reports one failure', async t => {

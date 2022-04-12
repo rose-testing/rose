@@ -1,5 +1,6 @@
 import { findSuite, listSuites } from './rose.mjs';
 import { promises as fs } from 'fs';
+import { red, green, reset } from './colors.mjs';
 
 await fs.readdir('./test')
   .then(files => {
@@ -15,7 +16,7 @@ await fs.readdir('./test')
 async function runner(suiteName) {
   let mainSuite = findSuite(suiteName);
 
-  await mainSuite.run();
+  await mainSuite.run(process.stdout);
 
   return mainSuite;
 }
@@ -30,15 +31,25 @@ const allSuites =
 let totalPassing = 0;
 let totalFailing = 0;
 
+console.log('\n');
+
 for (const suite of allSuites) {
   for (const failure of suite.failures) {
     console.log(`Failure: ${failure.test.description}`);
-    console.log(`\t${failure.hint}`);
+    if (failure.hint) {
+      console.log(`\t${failure.hint}`);
+    } else {
+      console.log(failure);
+    }
+
+    console.log('');
   }
 
   totalPassing += suite.passingTests;
   totalFailing += suite.failingTests;
 }
 
-console.log(`Passing: ${totalPassing}`);
-console.log(`Failing: ${totalFailing}`);
+const failingColor = totalFailing > 0 ? red : green;
+
+console.log(`${green}Passing: ${totalPassing}${reset}`);
+console.log(`${failingColor}Failing: ${totalFailing}${reset}`);

@@ -2,7 +2,10 @@
 * [ ] Run some teardown after the tests
 * [ ] Add deep equality assertion
 * [ ] Add boolean assertion
-* [ ] Handle generic errors in reporter
+* [x] Handle generic errors in reporter
+* [x] Per-test reporting (.s or fs)
+* [x] Colors!
+* [ ] GitHub CI
 
 
 
